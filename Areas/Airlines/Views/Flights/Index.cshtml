@@ -1,0 +1,276 @@
+@model Group5Flight.Models.FlightViewModel
+
+@{
+    // Binds this view to the Airline layout
+    Layout = "_AirlineLayout";
+    ViewData["Title"] = "Flights Management";
+}
+
+<div class="airline-dashboard">
+
+    @* ── Add / Edit Form ─────────────────────────────────── *@
+
+    @if (Model.EditingFlight == null)
+    {
+        <h3 class="form-section-title">Add New Flight</h3>
+
+        <form asp-area="Airlines" asp-controller="Flights" asp-action="Add"
+              method="post" class="flight-form">
+
+            <div class="form-field">
+                <label>Flight Code</label>
+                <input type="text" name="FlightCode" required />
+            </div>
+
+            <div class="form-field">
+                <label>Airline</label>
+                <select name="AirlineId">
+                    <option value="">Select Airline</option>
+                    @foreach (var item in Model.Airlines)
+                    {
+                        <option value="@item.AirlineId">@item.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>From (City)</label>
+                <input type="text" name="From" required />
+            </div>
+
+            <div class="form-field">
+                <label>To (City)</label>
+                <input type="text" name="To" required />
+            </div>
+
+            <div class="form-field">
+                <label>Date</label>
+                <input type="date" name="Date" required />
+            </div>
+
+            <div class="form-field">
+                <label>Departure Time</label>
+                <input type="time" name="DepartureTime" required />
+            </div>
+
+            <div class="form-field">
+                <label>Arrival Time</label>
+                <input type="time" name="ArrivalTime" required />
+            </div>
+
+            <div class="form-field">
+                <label>Cabin Type</label>
+                <select name="CabinType">
+                    @foreach (var c in Group5Flight.Models.FlightViewModel.CabinTypes)
+                    {
+                        <option value="@c">@c</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>Aircraft Type</label>
+                <select name="AircraftType">
+                    @foreach (var a in Group5Flight.Models.FlightViewModel.AircraftTypes)
+                    {
+                        <option value="@a">@a</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>Emission (kg CO₂)</label>
+                <input type="number" name="Emission" required />
+            </div>
+
+            <div class="form-field">
+                <label>Price ($)</label>
+                <input type="number" name="Price" step="0.01" required />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Add Flight</button>
+            </div>
+
+        </form>
+    }
+    else
+    {
+        <h3 class="form-section-title">Edit Flight</h3>
+
+        <form asp-area="Airlines" asp-controller="Flights" asp-action="Edit"
+              method="post" class="flight-form">
+
+            <input type="hidden" name="FlightId" value="@Model.EditingFlight.FlightId" />
+
+            <div class="form-field">
+                <label>Flight Code</label>
+                <input type="text" name="FlightCode"
+                       value="@Model.EditingFlight.FlightCode" required />
+            </div>
+
+            <div class="form-field">
+                <label>Airline</label>
+                <select name="AirlineId">
+                    @foreach (var item in Model.Airlines)
+                    {
+                        @if (item.AirlineId == Model.EditingFlight.AirlineId)
+                        {
+                            <option value="@item.AirlineId" selected>
+                                @item.Name
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@item.AirlineId">
+                                @item.Name
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>From (City)</label>
+                <input type="text" name="From"
+                       value="@Model.EditingFlight.From" required />
+            </div>
+
+            <div class="form-field">
+                <label>To (City)</label>
+                <input type="text" name="To"
+                       value="@Model.EditingFlight.To" required />
+            </div>
+
+            <div class="form-field">
+                <label>Date</label>
+                <input type="date" name="Date"
+                       value="@Model.EditingFlight.Date.ToString("yyyy-MM-dd")" required />
+            </div>
+
+            <div class="form-field">
+                <label>Departure Time</label>
+                <input type="time" name="DepartureTime"
+                       value="@Model.EditingFlight.DepartureTime.ToString(@"hh\:mm")" required />
+            </div>
+
+            <div class="form-field">
+                <label>Arrival Time</label>
+                <input type="time" name="ArrivalTime"
+                       value="@Model.EditingFlight.ArrivalTime.ToString(@"hh\:mm")" required />
+            </div>
+
+            <div class="form-field">
+                <label>Cabin Type</label>
+                <select name="CabinType">
+                    @foreach (var c in Group5Flight.Models.FlightViewModel.CabinTypes)
+                    {
+                        @if (Model.EditingFlight.CabinType == c)
+                        {
+                            <option value="@c" selected>
+                                @c
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@c">
+                                @c
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>Aircraft Type</label>
+                <select name="AircraftType">
+                    @foreach (var a in Group5Flight.Models.FlightViewModel.AircraftTypes)
+                    {
+                        @if (Model.EditingFlight.AircraftType == a)
+                        {
+                            <option value="@a" selected>
+                                @a
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@a">
+                                @a
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>Emission (kg CO₂)</label>
+                <input type="number" name="Emission"
+                       value="@Model.EditingFlight.Emission" required />
+            </div>
+
+            <div class="form-field">
+                <label>Price ($)</label>
+                <input type="number" name="Price" step="0.01"
+                       value="@Model.EditingFlight.Price" required />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Save Changes</button>
+                <a asp-area="Airlines" asp-controller="Flights" asp-action="Index" class="btn-back">Cancel</a>
+            </div>
+
+        </form>
+    }
+
+    <hr class="section-divider" />
+
+    @* ── Flight List ──────────────────────────────────────── *@
+
+    <h3 class="form-section-title">All Flights</h3>
+
+    <table class="flights-table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Airline</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Date</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Cabin</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var f in Model.Flights)
+            {
+                <tr>
+                    <td>@f.FlightCode</td>
+                    <td>@f.Airline?.Name</td>
+                    <td>@f.From</td>
+                    <td>@f.To</td>
+                    <td>@f.Date.ToShortDateString()</td>
+                    <td>@f.DepartureTime.ToString(@"hh\:mm")</td>
+                    <td>@f.ArrivalTime.ToString(@"hh\:mm")</td>
+                    <td>@f.CabinType</td>
+                    <td>$@f.Price</td>
+                    <td class="action-cell">
+                        <a asp-area="Airlines" asp-controller="Flights"
+                           asp-action="Edit" asp-route-id="@f.FlightId"
+                           class="btn-edit">Edit</a>
+                        <form asp-area="Airlines" asp-controller="Flights"
+                              asp-action="Delete" asp-route-id="@f.FlightId" method="post">
+                            <button type="submit" class="btn-delete"
+                                    onclick="return confirm('Delete flight @f.FlightCode?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

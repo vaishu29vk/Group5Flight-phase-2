@@ -1,0 +1,52 @@
+@{
+    Layout = "_Layout";
+
+    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+}
+
+@* TempData confirmation message – shown once *@
+@if (TempData["message"] != null)
+{
+    <div class="alert-message">
+        @TempData["message"]
+    </div>
+}
+
+<nav class="nav-bar">
+
+    <ul class="left-nav">
+        <li>
+            <a asp-area="Admin" asp-controller="Users" asp-action="Index"
+               class="@(currentAction == "Index" ? "active-link" : "")">
+                Home
+            </a>
+        </li>
+
+        <li>
+            <a asp-area="Admin" asp-controller="Users" asp-action="Manage"
+               class="@(currentAction == "Manage" ? "active-link" : "")">
+                User Management
+            </a>
+        </li>
+
+        <li>
+            <a asp-area="Admin" asp-controller="Users" asp-action="Rights"
+               class="@(currentAction == "Rights" ? "active-link" : "")">
+                Policies
+            </a>
+        </li>
+    </ul>
+
+    <ul class="right-nav">
+        <li>
+            <a asp-area="" asp-controller="Home" asp-action="Index">
+                Back to Client View
+            </a>
+        </li>
+    </ul>
+
+</nav>
+
+<div class="admin-content">
+    @RenderBody()
+</div>

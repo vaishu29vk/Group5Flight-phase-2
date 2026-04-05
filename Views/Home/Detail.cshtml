@@ -1,0 +1,95 @@
+@model Group5Flight.Models.Flight
+
+@{
+    Layout = "_MainLayout";
+    ViewData["Title"] = "Flight Information";
+    bool alreadyChosen = ViewBag.IsSelected ?? false;
+}
+
+<div class="detail-container">
+
+    <h2 class="detail-title">Flight Information</h2>
+
+    <div class="detail-card">
+
+        <div class="detail-row">
+            <span class="detail-label">Flight Code</span>
+            <span class="detail-value">@Model.FlightCode</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Airline</span>
+            <span class="detail-value">
+                @if (!string.IsNullOrEmpty(Model.Airline?.ImageName))
+                {
+                    <img src="~/images/@Model.Airline.ImageName"
+                         alt="@Model.Airline.Name"
+                         class="airline-icon" />
+                }
+                @Model.Airline?.Name
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Route</span>
+            <span class="detail-value">@Model.From → @Model.To</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Date</span>
+            <span class="detail-value">@Model.Date.ToShortDateString()</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Departure</span>
+            <span class="detail-value">@Model.DepartureTime.ToString(@"hh\:mm")</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Arrival</span>
+            <span class="detail-value">@Model.ArrivalTime.ToString(@"hh\:mm")</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Cabin Type</span>
+            <span class="detail-value">@Model.CabinType</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Aircraft Type</span>
+            <span class="detail-value">@Model.AircraftType</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Emission</span>
+            <span class="detail-value">@Model.Emission kg CO₂</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Price</span>
+            <span class="detail-value">$@Model.Price</span>
+        </div>
+
+    </div>
+
+    @if (alreadyChosen)
+    {
+        <p class="already-selected">✓ This flight is already in your selections.</p>
+    }
+
+    <div class="detail-actions">
+
+        @* Back to Home – session retains filter values *@
+        <a asp-action="Index" class="btn-back">← Back to Search</a>
+
+        @* Select – POST per PRG pattern *@
+        @if (!alreadyChosen)
+        {
+            <form asp-action="Select" asp-route-id="@Model.FlightId" method="post">
+                <button type="submit" class="btn-select">Add to Selection</button>
+            </form>
+        }
+
+    </div>
+
+</div>

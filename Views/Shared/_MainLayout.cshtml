@@ -1,0 +1,68 @@
+@{
+    // Use the base layout
+    Layout = "_Layout";
+
+    // Get routing values
+    var controllerName = ViewContext.RouteData.Values["Controller"]?.ToString();
+    var actionName     = ViewContext.RouteData.Values["Action"]?.ToString();
+
+    // Selection count from cookie for badge
+    var cookieHelper   = new Group5Flight.Models.FlightCookies(Context.Request.Cookies);
+    int selectionCount = cookieHelper.GetSelectedIds().Length;
+}
+
+@* TempData confirmation message – shown once, placed in layout per spec *@
+@if (TempData["message"] != null)
+{
+    <div class="alert-message">
+        @TempData["message"]
+    </div>
+}
+
+<nav class="nav-bar">
+    <ul class="left-nav">
+
+        <li>
+            <a asp-area="" asp-controller="Home" asp-action="Index"
+               class="@(controllerName == "Home" && actionName == "Index" ? "active-link" : "")">
+               Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a asp-area="" asp-controller="Home" asp-action="Privacy"
+               class="@(controllerName == "Home" && actionName == "Privacy" ? "active-link" : "")">
+               Privacy
+            </a>
+        </li>
+
+    </ul>
+
+    <ul class="right-nav">
+
+        <li>
+            @* Selection badge – shows count when flights are selected *@
+            <a asp-area="" asp-controller="Home" asp-action="Selections"
+               class="@(actionName == "Selections" ? "active-link selection-link" : "selection-link")">
+                Selections
+                @if (selectionCount > 0)
+                {
+                    <span class="selection-badge">@selectionCount</span>
+                }
+            </a>
+        </li>
+
+        <li>
+            <a asp-area="Admin" asp-controller="Users" asp-action="Index">Admin</a>
+        </li>
+
+        <li>
+            <a asp-area="Airlines" asp-controller="Flights" asp-action="Index">Airline</a>
+        </li>
+
+    </ul>
+</nav>
+
+<div class="main-content">
+    @RenderBody()
+</div>

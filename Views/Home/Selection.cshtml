@@ -1,0 +1,77 @@
+@model IEnumerable<Group5Flight.Models.Flight>
+
+@{
+    Layout = "_MainLayout";
+    ViewData["Title"] = "Selected Flights";
+}
+
+<div class="selections-container">
+
+    <h2 class="panel-title">Selected Flights</h2>
+
+    <div class="selections-actions">
+        <a asp-action="Index" class="btn-back">← Back to Search</a>
+
+        @* Clear all – POST per PRG pattern *@
+        <form asp-action="ClearSelections" method="post">
+            <button type="submit" class="btn-clear"
+                    onclick="return confirm('Remove all selections?')">
+                Clear All
+            </button>
+        </form>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p class="no-results">No flights have been selected.</p>
+    }
+    else
+    {
+        <table class="flights-table">
+            <thead>
+                <tr>
+                    <th>Airline</th>
+                    <th>Flight</th>
+                    <th>Route</th>
+                    <th>Date</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Cabin</th>
+                    <th>Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var flight in Model)
+                {
+                    <tr>
+                        <td class="airline-cell">
+                            @if (!string.IsNullOrEmpty(flight.Airline?.ImageName))
+                            {
+                                <img src="~/images/@flight.Airline.ImageName"
+                                     alt="@flight.Airline.Name"
+                                     class="airline-icon" />
+                            }
+                            @flight.Airline?.Name
+                        </td>
+                        <td>@flight.FlightCode</td>
+                        <td>@flight.From → @flight.To</td>
+                        <td>@flight.Date.ToShortDateString()</td>
+                        <td>@flight.DepartureTime.ToString(@"hh\:mm")</td>
+                        <td>@flight.ArrivalTime.ToString(@"hh\:mm")</td>
+                        <td>@flight.CabinType</td>
+                        <td>$@flight.Price</td>
+                        <td>
+                            <form asp-action="CancelSelection"
+                                  asp-route-id="@flight.FlightId"
+                                  method="post">
+                                <button type="submit" class="btn-cancel">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+</div>

@@ -1,0 +1,155 @@
+@model Group5Flight.Models.FlightViewModel
+
+@{
+    Layout = "_MainLayout";
+    ViewData["Title"] = "Flight Search";
+}
+
+<div class="dashboard-container">
+
+    @* ── Filter Panel ────────────────────────────────────── *@
+    <div class="filter-panel">
+        <h3 class="panel-title">Filter Options</h3>
+
+        <form asp-action="Index" method="post">
+
+            <div class="filter-field">
+                <label>From</label>
+                <select name="ActiveFrom">
+                    <option value="">All</option>
+                    @foreach (var city in Model.FromCities)
+                    {
+                        if (city == Model.ActiveFrom)
+                        {
+                            <option value="@city" selected>@city</option>
+                        }
+                        else
+                        {
+                            <option value="@city">@city</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="filter-field">
+                <label>To</label>
+                <select name="ActiveTo">
+                    <option value="">All</option>
+                    @foreach (var city in Model.ToCities)
+                    {
+                        if (city == Model.ActiveTo)
+                        {
+                            <option value="@city" selected>@city</option>
+                        }
+                        else
+                        {
+                            <option value="@city">@city</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="filter-field">
+                <label>Date</label>
+                @* Bootstrap DateRangePicker – initialized in site.js *@
+                <input type="text" name="ActiveDate"
+                       class="date-picker-input"
+                       value="@Model.ActiveDate"
+                       autocomplete="off" />
+            </div>
+
+            <div class="filter-field">
+                <label>Airline</label>
+                <select name="ActiveAirline">
+                    <option value="">All</option>
+                    @foreach (var airline in Model.Airlines)
+                    {
+                        if (airline.Name == Model.ActiveAirline)
+                        {
+                            <option value="@airline.Name" selected>@airline.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@airline.Name">@airline.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="filter-field">
+                <label>Cabin</label>
+                <select name="ActiveCabin">
+                    <option value="">All</option>
+                    @foreach (var c in Group5Flight.Models.FlightViewModel.CabinOptions)
+                    {
+                        if (c == Model.ActiveCabin)
+                        {
+                            <option value="@c" selected>@c</option>
+                        }
+                        else
+                        {
+                            <option value="@c">@c</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn-search">Apply Filter</button>
+
+        </form>
+    </div>
+
+    @* ── Results Panel ───────────────────────────────────── *@
+    <div class="results-panel">
+        <h3 class="panel-title">Available Flights (@Model.Flights.Count())</h3>
+
+        @if (!Model.Flights.Any())
+        {
+            <p class="no-results">No flights available for the selected filters.</p>
+        }
+        else
+        {
+            <table class="flights-table">
+                <thead>
+                    <tr>
+                        <th>Airline</th>
+                        <th>Route</th>
+                        <th>Date</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Cabin</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var f in Model.Flights)
+                    {
+                        <tr>
+                            <td class="airline-cell">
+                                @if (!string.IsNullOrEmpty(f.Airline?.ImageName))
+                                {
+                                    <img src="~/images/@f.Airline.ImageName"
+                                         alt="@f.Airline.Name"
+                                         class="airline-icon" />
+                                }
+                                @f.Airline?.Name
+                            </td>
+                            <td>@f.From → @f.To</td>
+                            <td>@f.Date.ToShortDateString()</td>
+                            <td>@f.DepartureTime.ToString(@"hh\:mm")</td>
+                            <td>@f.ArrivalTime.ToString(@"hh\:mm")</td>
+                            <td>@f.CabinType</td>
+                            <td>$@f.Price</td>
+                            <td>
+                                <a asp-action="Detail" asp-route-id="@f.FlightId"
+                                   class="btn-detail">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+</div>
