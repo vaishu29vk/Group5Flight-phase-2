@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Group5Flight")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18e1a324e6649bae46c7e78f7417b071ff0f258a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Group5Flight")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Group5Flight")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
